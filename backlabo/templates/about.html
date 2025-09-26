@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        DDDDDDDDDDDDDDD
+    </div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Vérifie si ce cookie est celui qu'on veut
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+
+        async function API(lien , methode, variable = null , retour) {
+            try {
+                let requete = await fetch(lien , {
+                    method: methode.toUpperCase(),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": csrftoken
+                        // Authorization ou autres headers si besoin
+                    },
+                    body:  JSON.stringify(variable),
+                })
+
+
+                if (requete.ok == true && requete.status === 200) {
+                    if (retour === 'text') {
+                        requete = await requete.text() //  si c'est un json qu'il retourne    
+                    }else{
+                        requete = await requete.json() //  si c'est un json qu'il retourne    
+                    }
+                    return requete
+                }else{
+                    return 'pas reussi'
+                }
+                
+            } catch (error) {
+                return error
+            }            
+        }
+
+        API("/labo_api/presentation", "POST").then(
+            r => {
+                console.log(r);
+                
+            }
+        )
+
+
+        
+    </script>
+</body>
+</html>
