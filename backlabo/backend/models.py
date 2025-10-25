@@ -885,3 +885,141 @@ class MessageContact(models.Model):
     def nom_complet_expediteur(self):
         """Retourne le nom complet de l'expéditeur"""
         return f"{self.prenom_expediteur} {self.nom_expediteur}"
+
+
+class ResultatRecherche(models.Model):
+    id_recherche = models.ForeignKey(Recherche, on_delete=models.CASCADE)
+    date_resultat = models.DateField()
+    creer_le = models.DateTimeField(auto_now_add=True)
+    mise_a_jour_le = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id_recherche.titre} - {self.date_resultat}"
+
+
+class ResultatRechercheJournal(models.Model):
+    """
+    Modèle pour le journal de bord d'un résultat de recherche
+    """
+    id_resultat_recherche = models.ForeignKey(ResultatRecherche, on_delete=models.CASCADE, related_name='journal_entries')
+    titre = models.CharField(max_length=255, verbose_name="Titre de l'activité")
+    date_activite = models.DateField(verbose_name="Date de l'activité")
+    heure_debut = models.TimeField(verbose_name="Heure de début", null=True, blank=True)
+    heure_fin = models.TimeField(verbose_name="Heure de fin", null=True, blank=True)
+    auteur = models.CharField(max_length=255, verbose_name="Auteur de l'activité")
+    details = models.TextField(verbose_name="Détails de l'activité")
+    observations = models.TextField(verbose_name="Observations", null=True, blank=True)
+    equipement_utilise = models.CharField(max_length=255, verbose_name="Équipement utilisé", null=True, blank=True)
+    lieu = models.CharField(max_length=255, verbose_name="Lieu", null=True, blank=True)
+    conditions_meteo = models.CharField(max_length=255, verbose_name="Conditions météorologiques", null=True, blank=True)
+    creer_le = models.DateTimeField(auto_now_add=True)
+    mise_a_jour_le = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Entrée de journal de recherche"
+        verbose_name_plural = "Entrées de journal de recherche"
+        ordering = ['-date_activite', '-heure_debut']
+
+    def __str__(self):
+        return f"{self.id_resultat_recherche} - {self.titre} ({self.date_activite})"
+
+
+class ResultatRechercheMateriel(models.Model):
+    """
+    Modèle pour le matériel utilisé dans un résultat de recherche
+    """
+    TYPE_MATERIEL_CHOICES = [
+        ("equipement", "Équipement"),
+        ("consommable", "Consommable"),
+        ("reactif", "Réactif/Produit chimique"),
+        ("logiciel", "Logiciel"),
+        ("autre", "Autre"),
+    ]
+    
+    id_resultat_recherche = models.ForeignKey(ResultatRecherche, on_delete=models.CASCADE, related_name='materiel')
+    type_materiel = models.CharField(max_length=20, choices=TYPE_MATERIEL_CHOICES, default="equipement")
+    nom = models.CharField(max_length=255, verbose_name="Nom du matériel")
+    reference = models.CharField(max_length=100, verbose_name="Référence", null=True, blank=True)
+    quantite = models.PositiveIntegerField(verbose_name="Quantité", default=1)
+    unite = models.CharField(max_length=50, verbose_name="Unité", default="unité")
+    description = models.TextField(verbose_name="Description", null=True, blank=True)
+    fournisseur = models.CharField(max_length=255, verbose_name="Fournisseur", null=True, blank=True)
+    cout_unitaire = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Coût unitaire", null=True, blank=True)
+    creer_le = models.DateTimeField(auto_now_add=True)
+    mise_a_jour_le = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Matériel de recherche"
+        verbose_name_plural = "Matériels de recherche"
+        ordering = ['type_materiel', 'nom']
+
+    def __str__(self):
+        return f"{self.id_resultat_recherche} - {self.nom}"
+
+
+class ResultatRechercheResultat(models.Model):
+    """
+    Modèle pour les résultats d'un résultat de recherche
+    """
+    TYPE_RESULTAT_CHOICES = [
+        ("synthese", "Synthèse des résultats"),
+        ("donnee_quantitative", "Données quantitatives"),
+        ("donnee_qualitative", "Données qualitatives"),
+        ("visualisation", "Visualisation/Graphique"),
+        ("conclusion", "Conclusion"),
+        ("recommandation", "Recommandation"),
+    ]
+    
+    id_resultat_recherche = models.ForeignKey(ResultatRecherche, on_delete=models.CASCADE, related_name='resultats')
+    type_resultat = models.CharField(max_length=30, choices=TYPE_RESULTAT_CHOICES, default="synthese")
+    titre = models.CharField(max_length=255, verbose_name="Titre du résultat")
+    description = models.TextField(verbose_name="Description du résultat")
+    valeur_numerique = models.DecimalField(max_digits=15, decimal_places=4, verbose_name="Valeur numérique", null=True, blank=True)
+    unite_mesure = models.CharField(max_length=50, verbose_name="Unité de mesure", null=True, blank=True)
+    fichier_resultat = models.FileField(upload_to="static/resultatsRecherche/", verbose_name="Fichier de résultat", null=True, blank=True)
+    image_resultat = models.ImageField(upload_to="static/resultatsRecherche/images/", verbose_name="Image de résultat", null=True, blank=True)
+    ordre = models.PositiveIntegerField(default=1, verbose_name="Ordre d'affichage")
+    creer_le = models.DateTimeField(auto_now_add=True)
+    mise_a_jour_le = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Résultat de recherche"
+        verbose_name_plural = "Résultats de recherche"
+        ordering = ['ordre', 'type_resultat']
+
+    def __str__(self):
+        return f"{self.id_resultat_recherche} - {self.titre}"
+
+
+class ResultatRechercheMethodologie(models.Model):
+    """
+    Modèle pour la méthodologie d'un résultat de recherche
+    """
+    TYPE_METHODE_CHOICES = [
+        ("experimentale", "Méthode expérimentale"),
+        ("observationnelle", "Méthode observationnelle"),
+        ("analytique", "Méthode analytique"),
+        ("simulation", "Simulation/Modélisation"),
+        ("enquete", "Enquête/Questionnaire"),
+        ("entretien", "Entretien"),
+        ("autre", "Autre"),
+    ]
+    
+    id_resultat_recherche = models.ForeignKey(ResultatRecherche, on_delete=models.CASCADE, related_name='methodologies')
+    type_methode = models.CharField(max_length=30, choices=TYPE_METHODE_CHOICES, default="experimentale")
+    titre = models.CharField(max_length=255, verbose_name="Titre de la méthode")
+    description = models.TextField(verbose_name="Description de la méthode")
+    etapes = models.TextField(verbose_name="Étapes détaillées", null=True, blank=True)
+    criteres_evaluation = models.TextField(verbose_name="Critères d'évaluation", null=True, blank=True)
+    limitations = models.TextField(verbose_name="Limitations", null=True, blank=True)
+    ordre = models.PositiveIntegerField(default=1, verbose_name="Ordre d'affichage")
+    creer_le = models.DateTimeField(auto_now_add=True)
+    mise_a_jour_le = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Méthodologie de recherche"
+        verbose_name_plural = "Méthodologies de recherche"
+        ordering = ['ordre', 'type_methode']
+
+    def __str__(self):
+        return f"{self.id_resultat_recherche} - {self.titre}"

@@ -38,7 +38,6 @@ import {
   useChercheurs,
   transformChercheurToTeamMember,
 } from "@/hooks/useChercheurs";
-import LoadingDots from "@/components/spinner";
 
 const Team = () => {
   const { chercheurs, loading, error, refetch } = useChercheurs(
@@ -257,14 +256,6 @@ const Team = () => {
     return chercheur?.reseaux || [];
   };
 
-  if (loading) {
-    return <LoadingDots />;
-  }
-
-  if (error) {
-    return <p>Erreur : {error}</p>;
-  }
-
   return (
     <section
       id="team"
@@ -295,20 +286,59 @@ const Team = () => {
             </p>
           </div>
 
-          <PageHero
-            stats={[
-              {
-                value: chercheurs.length.toString(),
-                label: "Total Chercheurs",
-              },
-              {
-                value: uniqueSpecializations.length.toString(),
-                label: "Spécialités",
-              },
-              { value: totalReseaux.toString(), label: "Réseaux Sociaux" },
-            ]}
-          />
+          <div className="flex justify-center mt-8">
+            <div className="max-w-4xl w-full">
+              <PageHero
+                classe = "grid grid-cols-1 sm:grid-cols-2 gap-6"
+                stats={[
+                  {
+                    value: chercheurs.length.toString(),
+                    label: "Total Chercheurs",
+                  },
+                  {
+                    value: uniqueSpecializations.length.toString(),
+                    label: "Spécialités",
+                  },
+                ]}
+              />
+            </div>
+          </div>
         </div>
+
+        {/* Gestion des erreurs */}
+        {error && (
+          <div className={Constants.ClassPdXgrandBlock}>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Erreur lors du chargement des données: {error}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-2"
+                  onClick={() => refetch()}
+                >
+                  Réessayer
+                </Button>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
+        {/* État de chargement */}
+        {loading && (
+          <div
+            className={
+              "flex justify-center items-center py-20 " +
+              Constants.ClassPdXgrandBlock
+            }
+          >
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="text-lg">Chargement des chercheurs...</span>
+            </div>
+          </div>
+        )}
 
         <div
           id="TeamBlockAll"
@@ -316,12 +346,12 @@ const Team = () => {
           style={Constants.bgWhite}
         >
           {/* Search Input */}
-          <div className="mb-5">
+          <div className="mb-10">
             <div
               className={
-                searchTerm === ""
-                  ? "relative max-w-md mx-auto"
-                  : "relative mx-auto "
+                searchTerm !== ""
+                  ? "relative mx-auto " :
+                  "relative max-w-md mx-auto"
               }
             >
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -329,7 +359,7 @@ const Team = () => {
                 placeholder="Rechercher un membre..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white/90 text-foreground placeholder:text-foreground/60 border border-border/50"
+                className="pl-10"
               />
             </div>
 
@@ -348,142 +378,115 @@ const Team = () => {
           {!loading && currentMembers.length > 0 ? (
             <div className="space-y-12">
               {/* Affichage groupé par poste */}
-              {sortedRoles.map((role) => {
-                const roleMembers = currentMembersByRole[role];
-                if (!roleMembers || roleMembers.length === 0) return null;
-
-                return (
-                  <div key={role} className="space-y-6">
-                    {/* Titre de la section par poste */}
-                    <div className="text-center">
-                      <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-                        {role}
-                      </h3>
-                      <div className="w-20 h-1 bg-gradient-to-r from-primary to-primary/50 mx-auto rounded-full"></div>
-                      <p className="text-foreground/80 mt-3">
-                        {roleMembers.length}{" "}
-                        {roleMembers.length === 1 ? "membre" : "membres"}
-                      </p>
-                    </div>
-
-                    {/* Grille des membres pour ce poste */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {roleMembers.map((member) => (
-                        <Card
-                          key={member.id}
-                          className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-card to-card/80 hover:-translate-y-2 group relative overflow-hidden"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                          <CardContent className="p-8 relative z-10">
-                            <div className="text-center mb-6">
-                              <div className="relative mx-auto mb-6">
-                                {/* Affichage de la photo ou initiales */}
-                                {member.photo ? (
-                                  <div className="w-24 h-24 mx-auto rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                                    <img
-                                      src={member.photo}
-                                      alt={member.name}
-                                      className="w-full h-full object-cover"
-                                      onError={(e) => {
-                                        // En cas d'erreur de chargement, afficher les initiales
-                                        const target =
-                                          e.target as HTMLImageElement;
-                                        target.style.display = "none";
-                                        const parent = target.parentElement;
-                                        if (parent) {
-                                          parent.innerHTML = `
-                                            <div class="w-full h-full bg-gradient-to-br from-primary via-primary/90 to-primary/80 flex items-center justify-center text-white text-2xl font-bold">
-                                              ${member.name
-                                                .split(" ")
-                                                .map((n) => n[0])
-                                                .join("")}
-                                            </div>
-                                          `;
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                ) : (
-                                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                                    {member.name
-                                      .split(" ")
-                                      .map((n) => n[0])
-                                      .join("")}
-                                  </div>
-                                )}
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg opacity-80" />
-                              </div>
-                              <h4 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
-                                {highlightText(member.name, searchTerm)}
-                              </h4>
-                              <p className="text-primary font-semibold mb-3">
-                                {highlightText(member.role, searchTerm)}
-                              </p>
-                              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-soft to-primary/10 rounded-full px-4 py-2 shadow-sm">
-                                <GraduationCap className="h-4 w-4 text-primary" />
-                                <span className="text-sm text-primary font-medium">
-                                  {highlightText(
-                                    member.specialization,
-                                    searchTerm
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="space-y-4">
-                              <p className="text-foreground/80 text-sm leading-relaxed line-clamp-3">
-                                {member.description}
-                              </p>
-
-                              <div className="flex flex-wrap gap-2 justify-center pt-2">
-                                {getMemberNetworks(member.id).map(
-                                  (reseau, index) => (
-                                    <Button
-                                      key={index}
-                                      variant="ghost"
-                                      size="sm"
-                                      className="hover:text-primary hover:bg-primary/10 rounded-full h-10 w-10 p-0 transition-all duration-300 hover:scale-110"
-                                      onClick={() =>
-                                        handleNetworkClick(
-                                          reseau.type_reseau,
-                                          reseau.contact
-                                        )
-                                      }
-                                      title={`${reseau.type_reseau}: ${reseau.contact}`}
-                                    >
-                                      {getNetworkIcon(reseau.type_reseau)}
-                                    </Button>
-                                  )
-                                )}
-                                {/* Fallback si aucun réseau n'est configuré */}
-                                {getMemberNetworks(member.id).length === 0 && (
-                                  <span className="text-xs text-muted-foreground italic">
-                                    Aucun réseau configuré
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* Lien vers la page détail du membre */}
-                              <div className="pt-2">
-                                <Button
-                                  variant="default"
-                                  size="sm"
-                                  className="w-full transition-all duration-300"
-                                  onClick={() =>
-                                    (window.location.href = `/team/${member.id}`)
+              {/* Remplacer cette section par un affichage simple sans regroupement par poste */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+                {currentMembers.map((member) => (
+                  <Card
+                    key={member.id}
+                    className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-card to-card/80 hover:-translate-y-2 group relative overflow-hidden w-full max-w-sm"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <CardContent className="p-8 relative z-10">
+                      <div className="text-center mb-6">
+                        <div className="relative mx-auto mb-6">
+                          {/* Affichage de la photo ou initiales */}
+                          {member.photo ? (
+                            <div className="w-24 h-24 mx-auto rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                              <img
+                                src={member.photo}
+                                alt={member.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  // En cas d'erreur de chargement, afficher les initiales
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = "none";
+                                  const parent = target.parentElement;
+                                  if (parent) {
+                                    parent.innerHTML = `
+                                      <div class="w-full h-full bg-gradient-to-br from-primary via-primary/90 to-primary/80 flex items-center justify-center text-white text-2xl font-bold">
+                                        ${member.name
+                                          .split(" ")
+                                          .map((n) => n[0])
+                                          .join("")}
+                                      </div>
+                                    `;
                                   }
-                                >
-                                  Voir le Profil
-                                </Button>
-                              </div>
+                                }}
+                              />
                             </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+                          ) : (
+                            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                              {member.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </div>
+                          )}
+                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg opacity-80" />
+                        </div>
+                        <h4 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
+                          {highlightText(member.name, searchTerm)}
+                        </h4>
+                        <p className="text-primary font-semibold mb-3">
+                          {highlightText(member.role, searchTerm)}
+                        </p>
+                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-soft to-primary/10 rounded-full px-4 py-2 shadow-sm mx-auto">
+                          <GraduationCap className="h-4 w-4 text-primary" />
+                          <span className="text-sm text-primary font-medium">
+                            {highlightText(member.specialization, searchTerm)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <p className="text-foreground/80 text-sm leading-relaxed line-clamp-3">
+                          {member.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-2 justify-center pt-2">
+                          {getMemberNetworks(member.id).map((reseau, index) => (
+                            <Button
+                              key={index}
+                              variant="ghost"
+                              size="sm"
+                              className="hover:text-primary hover:bg-primary/10 rounded-full h-10 w-10 p-0 transition-all duration-300 hover:scale-110"
+                              onClick={() =>
+                                handleNetworkClick(
+                                  reseau.type_reseau,
+                                  reseau.contact
+                                )
+                              }
+                              title={`${reseau.type_reseau}: ${reseau.contact}`}
+                            >
+                              {getNetworkIcon(reseau.type_reseau)}
+                            </Button>
+                          ))}
+                          {/* Fallback si aucun réseau n'est configuré */}
+                          {getMemberNetworks(member.id).length === 0 && (
+                            <span className="text-xs text-muted-foreground italic">
+                              Aucun réseau configuré
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Lien vers la page détail du membre */}
+                        <div className="pt-2">
+                          <Button
+                            variant="default"
+                            size="sm"
+                            className="w-full transition-all duration-300"
+                            onClick={() =>
+                              (window.location.href = `/team/${member.id}`)
+                            }
+                          >
+                            Voir le Profil
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           ) : (
             !loading && (
@@ -503,12 +506,12 @@ const Team = () => {
         {!loading && totalFilteredMembers > 0 && totalPages > 1 && (
           <div
             className={
-              "flex flex-col sm:flex-row justify-between items-center gap-6 " +
+              "flex flex-col sm:flex-row justify-center items-center gap-6 " +
               Constants.ClassPdXgrandBlock
             }
           >
             {/* Items per page selector and info */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Afficher:</span>
                 <Select
@@ -529,7 +532,7 @@ const Team = () => {
                 <span className="text-sm text-muted-foreground">par page</span>
               </div>
 
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground text-center sm:text-left">
                 Affichage de {startIndex + 1} à{" "}
                 {Math.min(endIndex, totalFilteredMembers)} sur{" "}
                 {totalFilteredMembers} résultats
@@ -614,7 +617,7 @@ const Team = () => {
         <div
           className={"relative overflow-hidden " + Constants.ClassPdXgrandBlock}
         >
-          <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-12 shadow-xl border border-primary/20 group hover:shadow-2xl transition-all duration-500">
+          <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-12 shadow-xl border border-primary/20 group hover:shadow-2xl transition-all duration-500 max-w-6xl mx-auto">
             {/* Background decorations */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-primary/15 to-transparent rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500" />

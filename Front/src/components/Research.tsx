@@ -98,7 +98,7 @@ const Research = (donnee) => {
         >
           {/* Search Input */}
           <div className="mb-10">
-            <div className={searchTerm === '' ? "relative max-w-md mx-auto" : "relative mx-auto"}>
+            <div className={searchTerm !== '' ? "relative mx-auto" : "relative max-w-md mx-auto"}>
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Rechercher un projet..."

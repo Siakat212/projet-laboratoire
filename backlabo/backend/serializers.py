@@ -1571,3 +1571,171 @@ class RecherchePublicationDetailSerializer(serializers.ModelSerializer):
     def get_citations(self, obj):
         qs = RecherchePublicationCitation.objects.filter(id_recherche_publication=obj)
         return PublicationCitationSerializer(qs, many=True).data
+
+
+class ResultatRechercheSerializer(serializers.ModelSerializer):
+    titre = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    statu = serializers.SerializerMethodField()
+    periode = serializers.SerializerMethodField()
+    nombreChercheur = serializers.SerializerMethodField()
+    budget = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ResultatRecherche
+        fields = ['id', 'titre', 'description', 'statu', 'periode', 'nombreChercheur', 'budget', 'date_resultat', 'creer_le', 'mise_a_jour_le']
+
+    def get_titre(self, obj):
+        return obj.id_recherche.titre
+
+    def get_description(self, obj):
+        return obj.id_recherche.description
+
+    def get_statu(self, obj):
+        return obj.id_recherche.statu
+
+    def get_periode(self, obj):
+        date_fin = obj.id_recherche.date_fin_reelle or obj.id_recherche.date_fin_prevue
+        if obj.id_recherche.date_debut and date_fin:
+            return f"{obj.id_recherche.date_debut.year} - {date_fin.year}"
+        return None
+
+    def get_nombreChercheur(self, obj):
+        return RechercheChercheur.objects.filter(id_recherche_id=obj.id_recherche_id).count()
+
+    def get_budget(self, obj):
+        return obj.id_recherche.budget_total
+
+class ResultatRechercheJournalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResultatRechercheJournal
+        fields = ['id', 'titre', 'date_activite', 'heure_debut', 'heure_fin', 'auteur', 'details', 
+                 'observations', 'equipement_utilise', 'lieu', 'conditions_meteo', 'creer_le', 'mise_a_jour_le']
+
+class ResultatRechercheMaterielSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResultatRechercheMateriel
+        fields = ['id', 'type_materiel', 'nom', 'reference', 'quantite', 'unite', 'description', 
+                 'fournisseur', 'cout_unitaire', 'creer_le', 'mise_a_jour_le']
+
+class ResultatRechercheResultatSerializer(serializers.ModelSerializer):
+    image_resultat_url = serializers.SerializerMethodField()
+    fichier_resultat_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = ResultatRechercheResultat
+        fields = ['id', 'type_resultat', 'titre', 'description', 'valeur_numerique', 'unite_mesure', 
+                 'fichier_resultat', 'fichier_resultat_url', 'image_resultat', 'image_resultat_url', 'ordre', 'creer_le', 'mise_a_jour_le']
+    
+    def get_image_resultat_url(self, obj):
+        if obj.image_resultat and hasattr(obj.image_resultat, 'url'):
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image_resultat.url)
+            return obj.image_resultat.url
+        return None
+    
+    def get_fichier_resultat_url(self, obj):
+        if obj.fichier_resultat and hasattr(obj.fichier_resultat, 'url'):
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.fichier_resultat.url)
+            return obj.fichier_resultat.url
+        return None
+
+class ResultatRechercheObjectifSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RechercheObjectif
+        fields = ['id', 'objectif', 'creer_le', 'mise_a_jour_le']
+
+
+class ResultatRechercheMethodologieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResultatRechercheMethodologie
+        fields = ['id', 'type_methode', 'titre', 'description', 'etapes', 'criteres_evaluation', 
+                 'limitations', 'ordre', 'creer_le', 'mise_a_jour_le']
+
+
+class ResultatRechercheEquipeSerializer(serializers.ModelSerializer):
+    nom_chercheur = serializers.SerializerMethodField()
+    prenom_chercheur = serializers.SerializerMethodField()
+    photo_chercheur = serializers.SerializerMethodField()
+    nom_complet = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = RechercheChercheur
+        fields = ['id', 'id_chercheur', 'role_equipe', 'nom_chercheur', 'prenom_chercheur', 
+                 'photo_chercheur', 'nom_complet', 'creer_le', 'mise_a_jour_le']
+    
+    def get_nom_chercheur(self, obj):
+        return obj.id_chercheur.nom if obj.id_chercheur else None
+    
+    def get_prenom_chercheur(self, obj):
+        return obj.id_chercheur.prenom if obj.id_chercheur else None
+    
+    def get_photo_chercheur(self, obj):
+        return obj.id_chercheur.photo.url if obj.id_chercheur and obj.id_chercheur.photo else None
+    
+    def get_nom_complet(self, obj):
+        if obj.id_chercheur:
+            return f"{obj.id_chercheur.prenom} {obj.id_chercheur.nom}"
+        return None
+
+
+
+class ResultatRechercheDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer complet pour les détails d'un résultat de recherche
+    """
+    # Informations de base de la recherche
+    titre_recherche = serializers.SerializerMethodField()
+    description_recherche = serializers.SerializerMethodField()
+    statu_recherche = serializers.SerializerMethodField()
+    periode_recherche = serializers.SerializerMethodField()
+    budget_recherche = serializers.SerializerMethodField()
+    nombre_chercheurs = serializers.SerializerMethodField()
+    
+    # Relations
+    objectifs = serializers.SerializerMethodField()
+    journal_entries = ResultatRechercheJournalSerializer(many=True, read_only=True)
+    materiel = ResultatRechercheMaterielSerializer(many=True, read_only=True)
+    resultats = ResultatRechercheResultatSerializer(many=True, read_only=True)
+    equipe = serializers.SerializerMethodField()
+    methodologies = ResultatRechercheMethodologieSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = ResultatRecherche
+        fields = ['id', 'date_resultat', 'creer_le', 'mise_a_jour_le',
+                 'titre_recherche', 'description_recherche', 'statu_recherche', 'periode_recherche', 
+                 'budget_recherche', 'nombre_chercheurs',
+                 'objectifs', 'journal_entries', 'materiel', 'resultats', 'equipe', 'methodologies']
+    
+    def get_titre_recherche(self, obj):
+        return obj.id_recherche.titre
+    
+    def get_description_recherche(self, obj):
+        return obj.id_recherche.description
+    
+    def get_statu_recherche(self, obj):
+        return obj.id_recherche.statu
+    
+    def get_periode_recherche(self, obj):
+        date_fin = obj.id_recherche.date_fin_reelle or obj.id_recherche.date_fin_prevue
+        if obj.id_recherche.date_debut and date_fin:
+            return f"{obj.id_recherche.date_debut.year} - {date_fin.year}"
+        return None
+    
+    def get_budget_recherche(self, obj):
+        return obj.id_recherche.budget_total
+    
+    def get_nombre_chercheurs(self, obj):
+        return RechercheChercheur.objects.filter(id_recherche_id=obj.id_recherche_id).count()
+    
+    def get_equipe(self, obj):
+        chercheurs = RechercheChercheur.objects.filter(id_recherche_id=obj.id_recherche_id).select_related('id_chercheur')
+        return ResultatRechercheEquipeSerializer(chercheurs, many=True).data
+    
+    def get_objectifs(self, obj):
+        objectifs = RechercheObjectif.objects.filter(id_recherche_id=obj.id_recherche_id)
+        return ResultatRechercheObjectifSerializer(objectifs, many=True).data
+

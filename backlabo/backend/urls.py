@@ -40,6 +40,8 @@ urlpatterns = [
     path('<int:id_laboratoire>/labo_api/recherche_slider', rechercheSlider , name = 'rechercheSlider'),
     path('<int:id_laboratoire>/labo_api/rechercheAll', rechercheAll , name = 'rechercheAll'),
     path('<int:id_laboratoire>/labo_api/detail_recherch/<int:id>', detailRecherche , name = 'detailRecherche'),
+        path('<int:id_laboratoire>/labo_api/resultat_recherche_all', resultatRechercheAll , name = 'resultatRechercheAll'),
+    path('<int:id_laboratoire>/labo_api/detail_resultat_recherche/<int:id>', detailResultatRecherche , name = 'detailResultatRecherche'),
     path('<int:id_laboratoire>/labo_api/directeur', directeur , name = 'directeur'),
     path('<int:id_laboratoire>/labo_api/detail_mot_directeur/<int:id>', directeurMotDirecteur , name = 'directeurMotDirecteur'),
 

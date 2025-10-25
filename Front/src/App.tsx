@@ -19,6 +19,8 @@ import DeclarationDetailPage from "./pages/DeclarationDetail";
 import LevelPage from "./pages/Level";
 import ContactPage from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import ResultatRecherchePage from "./pages/ResultatRecherche";
+import DetailResultatRecherchePage from "./pages/DetailResultatRecherche";
 
 const queryClient = new QueryClient();
 
@@ -41,9 +43,21 @@ const App = () => (
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:id" element={<NewsDetailPage />} />
           <Route path="/director" element={<DirectorPage />} />
-          <Route path="/director/declaration/:id" element={<DeclarationDetailPage />} />
+          <Route
+            path="/director/declaration/:id"
+            element={<DeclarationDetailPage />}
+          />
           <Route path="/level" element={<LevelPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route
+            path="/resultat-recherche"
+            element={<ResultatRecherchePage />}
+          />
+          <Route
+            path="/resultat-recherche/:id"
+            element={<DetailResultatRecherchePage />}
+          />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

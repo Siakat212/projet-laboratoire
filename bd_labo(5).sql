@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : sam. 25 oct. 2025 à 01:22
+-- Généré le : sam. 25 oct. 2025 à 21:02
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   KEY `auth_permission_content_type_id_2f476e4b` (`content_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=201 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=221 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `auth_permission`
@@ -273,7 +273,27 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (197, 'Can add Candidature au parcours', 50, 'add_candidatureparcours'),
 (198, 'Can change Candidature au parcours', 50, 'change_candidatureparcours'),
 (199, 'Can delete Candidature au parcours', 50, 'delete_candidatureparcours'),
-(200, 'Can view Candidature au parcours', 50, 'view_candidatureparcours');
+(200, 'Can view Candidature au parcours', 50, 'view_candidatureparcours'),
+(201, 'Can add Entrée de journal de recherche', 51, 'add_resultatrecherchejournal'),
+(202, 'Can change Entrée de journal de recherche', 51, 'change_resultatrecherchejournal'),
+(203, 'Can delete Entrée de journal de recherche', 51, 'delete_resultatrecherchejournal'),
+(204, 'Can view Entrée de journal de recherche', 51, 'view_resultatrecherchejournal'),
+(205, 'Can add Méthodologie de recherche', 52, 'add_resultatrecherchemethodologie'),
+(206, 'Can change Méthodologie de recherche', 52, 'change_resultatrecherchemethodologie'),
+(207, 'Can delete Méthodologie de recherche', 52, 'delete_resultatrecherchemethodologie'),
+(208, 'Can view Méthodologie de recherche', 52, 'view_resultatrecherchemethodologie'),
+(209, 'Can add Matériel de recherche', 53, 'add_resultatrecherchemateriel'),
+(210, 'Can change Matériel de recherche', 53, 'change_resultatrecherchemateriel'),
+(211, 'Can delete Matériel de recherche', 53, 'delete_resultatrecherchemateriel'),
+(212, 'Can view Matériel de recherche', 53, 'view_resultatrecherchemateriel'),
+(213, 'Can add resultat recherche', 54, 'add_resultatrecherche'),
+(214, 'Can change resultat recherche', 54, 'change_resultatrecherche'),
+(215, 'Can delete resultat recherche', 54, 'delete_resultatrecherche'),
+(216, 'Can view resultat recherche', 54, 'view_resultatrecherche'),
+(217, 'Can add Résultat de recherche', 55, 'add_resultatrechercheresultat'),
+(218, 'Can change Résultat de recherche', 55, 'change_resultatrechercheresultat'),
+(219, 'Can delete Résultat de recherche', 55, 'delete_resultatrechercheresultat'),
+(220, 'Can view Résultat de recherche', 55, 'view_resultatrechercheresultat');
 
 -- --------------------------------------------------------
 
@@ -303,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$1000000$L7w03MH0q5KXyulmPDxrev$YWpZF4YiN+seeCoN1AIEPgQgC0f4scFXp/knZGwhQGk=', '2025-10-13 08:40:05.924379', 1, 'traore', '', '', 't@gmail.com', 1, 1, '2025-09-08 21:10:23.643893');
+(1, 'pbkdf2_sha256$1000000$L7w03MH0q5KXyulmPDxrev$YWpZF4YiN+seeCoN1AIEPgQgC0f4scFXp/knZGwhQGk=', '2025-10-25 18:42:57.584427', 1, 'traore', '', '', 't@gmail.com', 1, 1, '2025-09-08 21:10:23.643893');
 
 -- --------------------------------------------------------
 
@@ -1573,6 +1593,155 @@ INSERT INTO `backend_rechercherealisation` (`id`, `titre`, `description`, `date_
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `backend_resultatrecherche`
+--
+
+DROP TABLE IF EXISTS `backend_resultatrecherche`;
+CREATE TABLE IF NOT EXISTS `backend_resultatrecherche` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `date_resultat` date NOT NULL,
+  `creer_le` datetime(6) NOT NULL,
+  `mise_a_jour_le` datetime(6) NOT NULL,
+  `id_recherche_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `backend_resultatrecherche_id_recherche_id_322e16ee` (`id_recherche_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `backend_resultatrecherche`
+--
+
+INSERT INTO `backend_resultatrecherche` (`id`, `date_resultat`, `creer_le`, `mise_a_jour_le`, `id_recherche_id`) VALUES
+(1, '2025-10-25', '2025-10-25 18:50:31.312770', '2025-10-25 18:50:31.312797', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `backend_resultatrecherchejournal`
+--
+
+DROP TABLE IF EXISTS `backend_resultatrecherchejournal`;
+CREATE TABLE IF NOT EXISTS `backend_resultatrecherchejournal` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `titre` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `date_activite` date NOT NULL,
+  `heure_debut` time(6) DEFAULT NULL,
+  `heure_fin` time(6) DEFAULT NULL,
+  `auteur` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `details` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `observations` longtext COLLATE utf8mb4_general_ci,
+  `equipement_utilise` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `lieu` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `conditions_meteo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `creer_le` datetime(6) NOT NULL,
+  `mise_a_jour_le` datetime(6) NOT NULL,
+  `id_resultat_recherche_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `backend_resultatrecherchejo_id_resultat_recherche_id_69dc9387` (`id_resultat_recherche_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `backend_resultatrecherchejournal`
+--
+
+INSERT INTO `backend_resultatrecherchejournal` (`id`, `titre`, `date_activite`, `heure_debut`, `heure_fin`, `auteur`, `details`, `observations`, `equipement_utilise`, `lieu`, `conditions_meteo`, `creer_le`, `mise_a_jour_le`, `id_resultat_recherche_id`) VALUES
+(1, 'Analyse', '2025-10-25', NULL, NULL, 'AHHH', 'Analyse Analyse Analyse Analyse Analyse Analyse Analyse Analyse Analyse', NULL, NULL, NULL, NULL, '2025-10-25 18:50:31.314173', '2025-10-25 18:50:31.314193', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `backend_resultatrecherchemateriel`
+--
+
+DROP TABLE IF EXISTS `backend_resultatrecherchemateriel`;
+CREATE TABLE IF NOT EXISTS `backend_resultatrecherchemateriel` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type_materiel` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `nom` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `reference` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `quantite` int UNSIGNED NOT NULL,
+  `unite` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_general_ci,
+  `fournisseur` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cout_unitaire` decimal(10,2) DEFAULT NULL,
+  `creer_le` datetime(6) NOT NULL,
+  `mise_a_jour_le` datetime(6) NOT NULL,
+  `id_resultat_recherche_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `backend_resultatrecherchema_id_resultat_recherche_id_7bead1ee` (`id_resultat_recherche_id`)
+) ;
+
+--
+-- Déchargement des données de la table `backend_resultatrecherchemateriel`
+--
+
+INSERT INTO `backend_resultatrecherchemateriel` (`id`, `type_materiel`, `nom`, `reference`, `quantite`, `unite`, `description`, `fournisseur`, `cout_unitaire`, `creer_le`, `mise_a_jour_le`, `id_resultat_recherche_id`) VALUES
+(1, 'equipement', 'Tableau', NULL, 1, 'unité', NULL, NULL, NULL, '2025-10-25 18:50:31.917759', '2025-10-25 18:50:31.917802', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `backend_resultatrecherchemethodologie`
+--
+
+DROP TABLE IF EXISTS `backend_resultatrecherchemethodologie`;
+CREATE TABLE IF NOT EXISTS `backend_resultatrecherchemethodologie` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type_methode` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `titre` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `etapes` longtext COLLATE utf8mb4_general_ci,
+  `criteres_evaluation` longtext COLLATE utf8mb4_general_ci,
+  `limitations` longtext COLLATE utf8mb4_general_ci,
+  `ordre` int UNSIGNED NOT NULL,
+  `creer_le` datetime(6) NOT NULL,
+  `mise_a_jour_le` datetime(6) NOT NULL,
+  `id_resultat_recherche_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `backend_resultatrechercheme_id_resultat_recherche_id_f9b14a67` (`id_resultat_recherche_id`)
+) ;
+
+--
+-- Déchargement des données de la table `backend_resultatrecherchemethodologie`
+--
+
+INSERT INTO `backend_resultatrecherchemethodologie` (`id`, `type_methode`, `titre`, `description`, `etapes`, `criteres_evaluation`, `limitations`, `ordre`, `creer_le`, `mise_a_jour_le`, `id_resultat_recherche_id`) VALUES
+(1, 'experimentale', 'ghghgh', 'ghghghghghgh', NULL, NULL, NULL, 1, '2025-10-25 18:50:32.499255', '2025-10-25 18:50:32.499307', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `backend_resultatrechercheresultat`
+--
+
+DROP TABLE IF EXISTS `backend_resultatrechercheresultat`;
+CREATE TABLE IF NOT EXISTS `backend_resultatrechercheresultat` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type_resultat` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `titre` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `valeur_numerique` decimal(15,4) DEFAULT NULL,
+  `unite_mesure` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `fichier_resultat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image_resultat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ordre` int UNSIGNED NOT NULL,
+  `creer_le` datetime(6) NOT NULL,
+  `mise_a_jour_le` datetime(6) NOT NULL,
+  `id_resultat_recherche_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `backend_resultatrecherchere_id_resultat_recherche_id_2096d988` (`id_resultat_recherche_id`)
+) ;
+
+--
+-- Déchargement des données de la table `backend_resultatrechercheresultat`
+--
+
+INSERT INTO `backend_resultatrechercheresultat` (`id`, `type_resultat`, `titre`, `description`, `valeur_numerique`, `unite_mesure`, `fichier_resultat`, `image_resultat`, `ordre`, `creer_le`, `mise_a_jour_le`, `id_resultat_recherche_id`) VALUES
+(1, 'synthese', 'une theorie', '', 12.0000, 'cm', '', 'static/resultatsRecherche/images/Capture_décran_2025-09-30_024130.png', 1, '2025-10-25 18:50:32.356441', '2025-10-25 18:50:32.356480', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `backend_type`
 --
 
@@ -1903,7 +2072,8 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 (247, '2025-10-13 09:06:34.202101', '3', 'Siaka Traore', 2, '[{\"changed\": {\"name\": \"chercheur poste\", \"object\": \"Traore Siaka - Doctorant\", \"fields\": [\"Id poste\"]}}]', 7, 1),
 (248, '2025-10-13 11:37:16.778151', '1', 'sgshd jhds - dsjhj', 2, '[{\"changed\": {\"fields\": [\"R\\u00e9ponse administrative\"]}}]', 49, 1),
 (249, '2025-10-13 11:40:52.621958', '2', 'Tra Sia - dsjhj', 2, '[{\"changed\": {\"fields\": [\"Statut du message\", \"R\\u00e9ponse administrative\", \"Responsable de la r\\u00e9ponse\", \"Date de r\\u00e9ponse\", \"Message trait\\u00e9\"]}}]', 49, 1),
-(250, '2025-10-13 21:23:45.699761', '1', 'labo info - Contact principal - 1: 21:23:38-21:23:39', 1, '[{\"added\": {}}]', 47, 1);
+(250, '2025-10-13 21:23:45.699761', '1', 'labo info - Contact principal - 1: 21:23:38-21:23:39', 1, '[{\"added\": {}}]', 47, 1),
+(251, '2025-10-25 18:50:32.631076', '1', 'Cellules Solaires Pérovskite - 2025-10-25', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"Entr\\u00e9e de journal de recherche\", \"object\": \"Cellules Solaires P\\u00e9rovskite - 2025-10-25 - Analyse (2025-10-25)\"}}, {\"added\": {\"name\": \"Mat\\u00e9riel de recherche\", \"object\": \"Cellules Solaires P\\u00e9rovskite - 2025-10-25 - Tableau\"}}, {\"added\": {\"name\": \"R\\u00e9sultat de recherche\", \"object\": \"Cellules Solaires P\\u00e9rovskite - 2025-10-25 - une theorie\"}}, {\"added\": {\"name\": \"M\\u00e9thodologie de recherche\", \"object\": \"Cellules Solaires P\\u00e9rovskite - 2025-10-25 - ghghgh\"}}]', 54, 1);
 
 -- --------------------------------------------------------
 
@@ -1918,7 +2088,7 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `django_content_type`
@@ -1974,7 +2144,12 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (47, 'backend', 'horairelaboratoire'),
 (48, 'backend', 'contactlaboratoire'),
 (49, 'backend', 'messagecontact'),
-(50, 'backend', 'candidatureparcours');
+(50, 'backend', 'candidatureparcours'),
+(51, 'backend', 'resultatrecherchejournal'),
+(52, 'backend', 'resultatrecherchemethodologie'),
+(53, 'backend', 'resultatrecherchemateriel'),
+(54, 'backend', 'resultatrecherche'),
+(55, 'backend', 'resultatrechercheresultat');
 
 -- --------------------------------------------------------
 
@@ -1989,7 +2164,7 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `django_migrations`
@@ -2049,7 +2224,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (51, 'backend', '0033_candidatureparcours_contactlaboratoire_and_more', '2025-09-26 01:00:57.165939'),
 (52, 'backend', '0034_remove_contactlaboratoire_type_contact', '2025-10-13 11:21:30.629347'),
 (53, 'backend', '0035_contactlaboratoire_type_contact', '2025-10-13 11:24:10.534432'),
-(54, 'backend', '0036_laboratoire_description', '2025-10-13 22:30:36.979363');
+(54, 'backend', '0036_laboratoire_description', '2025-10-13 22:30:36.979363'),
+(55, 'backend', '0037_resultatrecherche_resultatrecherchejournal_and_more', '2025-10-25 16:26:37.997297');
 
 -- --------------------------------------------------------
 
@@ -2077,7 +2253,9 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('wbxmpjcze00q62w610zcdeuvzhlqzl0v', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1v1zxa:WrQ3Cih6VJv_PxBylUiYpS2O4QLOF8cMscq3LGo_K7o', '2025-10-10 04:21:30.167858'),
 ('rabhlww3wlwsktbd5p2kvjm1a25iwd3i', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1v20zP:uAtO1rt22idWJlFrPO6EB4Hx4gVeREgIpymryBBtGdA', '2025-10-10 05:27:27.902816'),
 ('ri3ri80o5qeu0k96bscomkpdktc8qq0c', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1v20zR:93ljKF74D9Itg63RYgckI-KnbO5iY6JaJj-KPeRfWKc', '2025-10-10 05:27:29.480095'),
-('pikxwg4pje64tspfd9d6qyn3q370k3s3', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1v8E6A:ATa4xyroZoIrKLjnlVjByW1IrnQus-sVtDxXZ5iZqx4', '2025-10-27 08:40:06.037702');
+('pikxwg4pje64tspfd9d6qyn3q370k3s3', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1v8E6A:ATa4xyroZoIrKLjnlVjByW1IrnQus-sVtDxXZ5iZqx4', '2025-10-27 08:40:06.037702'),
+('imxk2o59n6pe61htnogmiiaygr0fc42b', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1vCjE8:L2k2TZ_-oXeFQtmm8nRa1IsXUj5ujW-wpc_RnnONmKY', '2025-11-08 18:42:56.928209'),
+('elfsdhye5xlduedzgvwjxnzadl5myyk2', '.eJxVjDsOwjAQBe_iGln-ZmNKes5grddrHECOFCcV4u4QKQW0b2beS0Tc1hq3zkucsjgLLU6_W0J6cNtBvmO7zZLmti5TkrsiD9rldc78vBzu30HFXr81DWQdDAkoUciBqCiAXKxKvqjsIBkyRaFznuw4OsNkCJG9hmBZOyXeHwN-OFc:1vCjE9:0PoAVC5FbKZIC8qB4lCeZDeS5dxAMxzpOUQH33LGU6E', '2025-11-08 18:42:57.586115');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

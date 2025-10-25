@@ -221,6 +221,15 @@ class LaboratoireParcourConditionAdmissionInline(admin.TabularInline):
 class LaboratoireParcourSpecialisationInline(admin.TabularInline):
     model = LaboratoireParcourSpecialisation
 
+class LaboratoireContactInline(admin.TabularInline):
+    model = ContactLaboratoire
+    extra = 1
+    min_num = 1
+    max_num = 1
+    validate_min = True
+    validate_max = True
+    formset = RequireExactlyOneFormSet
+
 
 class ChercheurAdmin(admin.ModelAdmin):
     list_display = ("prenom", "nom", "statut", "date_embauche")
@@ -247,7 +256,8 @@ class LaboratoireAdmin(admin.ModelAdmin):
         LaboratoireParcourInline,
         LaboratoirePageBlockEnteteInline,
         LaboratoireSliderInline,
-        LaboratoirePartenaireInline
+        LaboratoirePartenaireInline,
+        LaboratoireContactInline
     ]
 
 
@@ -420,13 +430,6 @@ class CandidatureParcoursAdmin(admin.ModelAdmin):
     ordering = ("date_soumission",)
 
 
-class ContactLaboratoireAdmin(admin.ModelAdmin):
-    list_display = ("id_laboratoire__nom", "telephone_principal", "email_principal", "adresse_complete")
-    search_fields = ("id_laboratoire__nom", "email_principal", "adresse_complete")
-    list_filter = ("creer_le",)
-    ordering = ("creer_le",)
-
-
 class HoraireLaboratoireAdmin(admin.ModelAdmin):
     list_display = ("contact_laboratoire__id_laboratoire__nom", "contact_laboratoire__type_contact", "jour_semaine", "heure_ouverture", "heure_fermeture", "est_ferme")
     search_fields = ("contact_laboratoire__id_laboratoire__nom", "contact_laboratoire__type_contact")
@@ -454,88 +457,7 @@ admin.site.register(ChercheurLaboratoire, ChercheurLaboratoireAdmin)
 admin.site.register(RechercheRealisation, RechercheRealisationAdmin)
 
 
-class ResultatRechercheJournalInline(admin.TabularInline):
-    model = ResultatRechercheJournal
-    extra = 1
-    fields = ('titre', 'date_activite', 'auteur', 'details')
-
-
-class ResultatRechercheMaterielInline(admin.TabularInline):
-    model = ResultatRechercheMateriel
-    extra = 1
-    fields = ('type_materiel', 'nom', 'quantite', 'unite', 'cout_unitaire')
-
-
-class ResultatRechercheResultatInline(admin.TabularInline):
-    model = ResultatRechercheResultat
-    extra = 1
-    fields = ('type_resultat', 'titre', 'valeur_numerique', 'unite_mesure', 'image_resultat')
-
-
-class ResultatRechercheMethodologieInline(admin.TabularInline):
-    model = ResultatRechercheMethodologie
-    extra = 1
-    fields = ('type_methode', 'titre', 'description')
-
-
-class ResultatRechercheAdmin(admin.ModelAdmin):
-    list_display = ("id_recherche", "date_resultat", "creer_le")
-    search_fields = ("id_recherche__titre",)
-    list_filter = ("date_resultat", "creer_le")
-    ordering = ("-date_resultat",)
-    inlines = [
-        ResultatRechercheJournalInline,
-        ResultatRechercheMaterielInline,
-        ResultatRechercheResultatInline,
-        ResultatRechercheMethodologieInline,
-    ]
-
-admin.site.register(ResultatRecherche, ResultatRechercheAdmin)
-
-
-class ResultatRechercheJournalAdmin(admin.ModelAdmin):
-    list_display = ("id_resultat_recherche", "titre", "date_activite", "auteur")
-    search_fields = ("titre", "auteur", "id_resultat_recherche__id_recherche__titre")
-    list_filter = ("date_activite", "auteur")
-    ordering = ("-date_activite",)
-    raw_id_fields = ("id_resultat_recherche",)
-
-admin.site.register(ResultatRechercheJournal, ResultatRechercheJournalAdmin)
-
-
-class ResultatRechercheMaterielAdmin(admin.ModelAdmin):
-    list_display = ("id_resultat_recherche", "type_materiel", "nom", "quantite", "unite", "cout_unitaire")
-    search_fields = ("nom", "reference", "fournisseur", "id_resultat_recherche__id_recherche__titre")
-    list_filter = ("type_materiel", "unite")
-    ordering = ("type_materiel", "nom")
-    raw_id_fields = ("id_resultat_recherche",)
-
-admin.site.register(ResultatRechercheMateriel, ResultatRechercheMaterielAdmin)
-
-
-class ResultatRechercheResultatAdmin(admin.ModelAdmin):
-    list_display = ("id_resultat_recherche", "type_resultat", "titre", "valeur_numerique", "unite_mesure", "ordre")
-    search_fields = ("titre", "description", "id_resultat_recherche__id_recherche__titre")
-    list_filter = ("type_resultat", "ordre")
-    ordering = ("ordre", "type_resultat")
-    raw_id_fields = ("id_resultat_recherche",)
-    fields = ('id_resultat_recherche', 'type_resultat', 'titre', 'description', 'valeur_numerique', 'unite_mesure', 'fichier_resultat', 'image_resultat', 'ordre')
-
-admin.site.register(ResultatRechercheResultat, ResultatRechercheResultatAdmin)
-
-
-class ResultatRechercheMethodologieAdmin(admin.ModelAdmin):
-    list_display = ("id_resultat_recherche", "type_methode", "titre", "ordre")
-    search_fields = ("titre", "description", "id_resultat_recherche__id_recherche__titre")
-    list_filter = ("type_methode", "ordre")
-    ordering = ("ordre", "type_methode")
-    raw_id_fields = ("id_resultat_recherche",)
-
-admin.site.register(ResultatRechercheMethodologie, ResultatRechercheMethodologieAdmin)
-
-
 
 admin.site.register(CandidatureParcours, CandidatureParcoursAdmin)
-admin.site.register(ContactLaboratoire, ContactLaboratoireAdmin)
 admin.site.register(HoraireLaboratoire, HoraireLaboratoireAdmin)
 admin.site.register(MessageContact, MessageContactAdmin)

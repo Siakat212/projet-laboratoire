@@ -2,14 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Microscope } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useFetch } from "@/hooks/use-fetch";
-import { Constants } from "@/constants/Constants";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const location = useLocation();
-
+  
   const navItems = [
     { label: "Accueil", href: "/" },
     { label: "À propos", href: "/about" },
@@ -19,11 +17,9 @@ const Navigation = () => {
     { label: "Actualités", href: "/news" },
     { label: "Parcour Master", href: "/level" },
     { label: "Contact", href: "/contact" },
+    { label: "Résultats", href: "/resultat-recherche" },
   ];
 
-  const [dataLaboratoire, loadingLaboratoire, errorLaboratoire] = useFetch(
-    `${Constants.url}/labo_api/laboratoire`
-  );
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-b border-border shadow-lg">
@@ -31,28 +27,10 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
-              {dataLaboratoire && dataLaboratoire.data.logo ? (
-                <div
-                  className="h-8 w-8"
-                  style={{
-                    backgroundImage: `url(${
-                      Constants.urlDomaine
-                    }static${dataLaboratoire.data.logo
-                      .split("/static")
-                      .join("")})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                />
-              ) : (
-                <Microscope className="h-8 w-8 text-primary" />
-              )}
+              <Microscope className="h-8 w-8 text-primary" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              {dataLaboratoire && dataLaboratoire.data.nom
-                ? dataLaboratoire.data.nom
-                : "Labo"}
+              SnLab
             </span>
           </Link>
 
@@ -63,9 +41,9 @@ const Navigation = () => {
                 key={item.label}
                 to={item.href}
                 className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-accent/50 ${
-                  location.pathname === item.href
-                    ? "text-primary bg-primary/10 shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                  location.pathname === item.href 
+                    ? 'text-primary bg-primary/10 shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -85,11 +63,7 @@ const Navigation = () => {
               aria-label="Toggle menu"
               className="h-12 w-12 hover:bg-accent/50"
             >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
         </div>
@@ -104,9 +78,9 @@ const Navigation = () => {
                   to={item.href}
                   onClick={() => setIsOpen(false)}
                   className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
-                    location.pathname === item.href
-                      ? "text-primary bg-primary/10 shadow-sm font-medium"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    location.pathname === item.href 
+                      ? 'text-primary bg-primary/10 shadow-sm font-medium' 
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
                   }`}
                 >
                   {item.label}

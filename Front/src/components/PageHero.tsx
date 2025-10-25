@@ -43,9 +43,10 @@ interface PageHeroProps {
     value: string;
     label: string;
   }>;
+  classe?: string
 }
 
-const PageHero = ({stats}: PageHeroProps) => {
+const PageHero = ({stats, classe}: PageHeroProps) => {
   const scrollToNext = () => {
     const nextSection = document.querySelector("section:nth-of-type(2)");
     nextSection?.scrollIntoView({ behavior: "smooth" });
@@ -54,7 +55,7 @@ const PageHero = ({stats}: PageHeroProps) => {
   return (
     <section className="relative flex items-center justify-center overflow-hidden" style={Constants.pdTopCardHero}>
         {stats && stats.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className={classe ? classe : "grid grid-cols-1 sm:grid-cols-3 gap-6"}>
             {stats.map((stat, index) => (
               <AnimatedStat
                 key={index}

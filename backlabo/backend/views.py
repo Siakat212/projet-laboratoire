@@ -670,3 +670,53 @@ class MessageContactViewSet(viewsets.ModelViewSet):
         message.save(update_fields=['est_traite', 'statut_message', 'reponse_admin', 'responsable_reponse'])
         ser = MessageContactSerializer(message, context={'request': request})
         return Response(ser.data)
+
+
+
+@api_view(['GET'])
+def resultatRechercheAll(request, id_laboratoire):
+    try:
+        # Récupérer les recherches liées au laboratoire
+        recherches_labo = RechercheLaboratoire.objects.filter(
+            id_laboratoire_domaine__id_laboratoire_id=id_laboratoire
+        ).values_list('id_recherche_id', flat=True)
+        
+        # Récupérer les résultats de recherche correspondants
+        data = ResultatRecherche.objects.filter(
+            id_recherche_id__in=recherches_labo
+        ).select_related('id_recherche').order_by('-date_resultat')
+        
+        serializer = ResultatRechercheSerializer(data, many=True)
+        
+        return Response({'data': serializer.data})
+    except Exception as e:
+        logger.error(f"Error in resultatRechercheAll for lab {id_laboratoire}: {str(e)}")
+        return Response({'data': [], 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def detailResultatRecherche(request, id_laboratoire, id):
+    """
+    Récupère les détails complets d'un résultat de recherche
+    """
+    try:
+        # Vérifier que le résultat de recherche appartient au laboratoire
+        resultat = ResultatRecherche.objects.filter(
+            id=id,
+            id_recherche__recherchelaboratoire__id_laboratoire_domaine__id_laboratoire_id=id_laboratoire
+        ).select_related('id_recherche').prefetch_related(
+            'journal_entries',
+            'materiel',
+            'resultats',
+            'methodologies'
+        ).first()
+        
+        if not resultat:
+            return Response({'error': 'Résultat de recherche non trouvé'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = ResultatRechercheDetailSerializer(resultat, context={'request': request})
+        return Response({'data': serializer.data})
+        
+    except Exception as e:
+        logger.error(f"Error in detailResultatRecherche for lab {id_laboratoire}, result {id}: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
