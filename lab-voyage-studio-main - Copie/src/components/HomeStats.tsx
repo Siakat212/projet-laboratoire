@@ -49,10 +49,10 @@ const HomeStats = (donnee) => {
       bgColor: "bg-warning/10"
     },
     {
-      icon: TrendingUp,
-      value: donnees && donnees.nombreRechercherFinaliser ? donnees.nombreRechercherFinaliser + "%" : 0+"%",
-      label: "Taux de Réussite",
-      description: "Projets finalisés",
+      icon: donnees.nombreDoctorant !== 0 ? Users : TrendingUp,
+      value: donnees.nombreDoctorant !== 0 ? donnees.nombreDoctorant : donnees.nombreRechercherFinaliser ? donnees.nombreRechercherFinaliser + "%" : 0+"%",
+      label: donnees.nombreDoctorant !== 0 ? "doctorant" : "Taux de Réussite",
+      description: donnees.nombreDoctorant !== 0 ? "Nombre de Doctorant" : "Projets finalisés",
       color: "text-success",
       bgColor: "bg-success/10"
     }
@@ -66,9 +66,6 @@ const HomeStats = (donnee) => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <Badge style={Constants.textWhite} className="bg-gradient-to-r from-primary/20 to-accent/20 text-primary border-primary/30 mb-4">
-            Notre Impact
-          </Badge>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             {dataEntete
               .filter((item) => item.block === "chiffre" && item.page === "acceuil")

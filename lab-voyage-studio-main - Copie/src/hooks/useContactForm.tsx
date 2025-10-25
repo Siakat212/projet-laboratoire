@@ -89,7 +89,6 @@ export const useContactForm = (): UseContactFormReturn => {
     setIsLoading(true);
 
     try {
-      console.log('Envoi du message via l\'API Django...');
       
       // Préparer les données pour l'API Django
       const messageData: MessageContactCreate = {
@@ -103,11 +102,8 @@ export const useContactForm = (): UseContactFormReturn => {
         priorite: 'normale'
       };
 
-      console.log('Données du message:', messageData);
-
       // Envoyer le message via l'API Django
       const response = await contactApiService.sendMessage(messageData);
-      console.log('Réponse de l\'API:', response);
       
       toast.success('Message envoyé avec succès ! Nous vous recontacterons bientôt.');
       resetForm();

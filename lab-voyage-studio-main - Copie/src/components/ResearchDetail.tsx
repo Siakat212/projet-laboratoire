@@ -16,6 +16,7 @@ const ResearchDetail = (donnee) => {
   
   // Données d'exemple des projets de recherche
   const project = dataDetail
+  
 
 
   if (!project) {
@@ -166,8 +167,8 @@ const ResearchDetail = (donnee) => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">Budget :</span>
-                    <span className="font-semibold">{project.budget ? project.budget.toLocaleString() : "N/A"} FCFA</span>
+                    <span className="text-sm font-medium text-muted-foreground">Nombre domaine : </span>
+                    <span className="font-semibold">{project.nomDomaine.length}</span>
                   </div>
                   <div>
                     <span className="text-sm font-medium text-muted-foreground">Partenaires :</span>

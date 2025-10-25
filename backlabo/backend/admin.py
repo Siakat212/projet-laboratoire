@@ -221,6 +221,15 @@ class LaboratoireParcourConditionAdmissionInline(admin.TabularInline):
 class LaboratoireParcourSpecialisationInline(admin.TabularInline):
     model = LaboratoireParcourSpecialisation
 
+class LaboratoireContactInline(admin.TabularInline):
+    model = ContactLaboratoire
+    extra = 1
+    min_num = 1
+    max_num = 1
+    validate_min = True
+    validate_max = True
+    formset = RequireExactlyOneFormSet
+
 
 class ChercheurAdmin(admin.ModelAdmin):
     list_display = ("prenom", "nom", "statut", "date_embauche")
@@ -247,7 +256,8 @@ class LaboratoireAdmin(admin.ModelAdmin):
         LaboratoireParcourInline,
         LaboratoirePageBlockEnteteInline,
         LaboratoireSliderInline,
-        LaboratoirePartenaireInline
+        LaboratoirePartenaireInline,
+        LaboratoireContactInline
     ]
 
 
@@ -420,13 +430,6 @@ class CandidatureParcoursAdmin(admin.ModelAdmin):
     ordering = ("date_soumission",)
 
 
-class ContactLaboratoireAdmin(admin.ModelAdmin):
-    list_display = ("id_laboratoire__nom", "telephone_principal", "email_principal", "adresse_complete")
-    search_fields = ("id_laboratoire__nom", "email_principal", "adresse_complete")
-    list_filter = ("creer_le",)
-    ordering = ("creer_le",)
-
-
 class HoraireLaboratoireAdmin(admin.ModelAdmin):
     list_display = ("contact_laboratoire__id_laboratoire__nom", "contact_laboratoire__type_contact", "jour_semaine", "heure_ouverture", "heure_fermeture", "est_ferme")
     search_fields = ("contact_laboratoire__id_laboratoire__nom", "contact_laboratoire__type_contact")
@@ -456,6 +459,5 @@ admin.site.register(RechercheRealisation, RechercheRealisationAdmin)
 
 
 admin.site.register(CandidatureParcours, CandidatureParcoursAdmin)
-admin.site.register(ContactLaboratoire, ContactLaboratoireAdmin)
 admin.site.register(HoraireLaboratoire, HoraireLaboratoireAdmin)
 admin.site.register(MessageContact, MessageContactAdmin)

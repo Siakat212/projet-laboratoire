@@ -5,7 +5,7 @@ from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from api.models import Laboratoire
+from .models import Laboratoire
 import logging
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class EmailService:
     """
     
     @staticmethod
-    def envoyer_notification_nouveau_message(message_contact):
+    def envoyer_notification_nouveau_message(message_contact, id_laboratoire):
         """
         Envoie une notification par email lorsqu'un nouveau message de contact est reçu
         
@@ -27,7 +27,7 @@ class EmailService:
         try:
             # Utiliser toujours le laboratoire avec ID=1 si disponible
             try:
-                laboratoire = Laboratoire.objects.get(pk=1)
+                laboratoire = Laboratoire.objects.get(pk=id_laboratoire)
             except Laboratoire.DoesNotExist:
                 laboratoire = message_contact.id_laboratoire
             

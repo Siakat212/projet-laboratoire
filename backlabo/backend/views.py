@@ -8,7 +8,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import *
 from django.db.models import Q
 import re
+
+
+from .services import EmailService
 import logging
+
 logger = logging.getLogger(__name__)
 
 # Create your views here.
@@ -18,6 +22,12 @@ def acceuil(request):
 
 def aboutPage(request):
     return render(request, 'about.html')
+
+@api_view(['GET'])
+def laboratoire(request, id_laboratoire):
+    data = Laboratoire.objects.get(id= id_laboratoire)
+    return Response({'data': LaboratoireSerializers(data, many=False).data})
+
 
 @api_view(['GET'])
 def enteteGeneral(request, id_laboratoire):
@@ -627,10 +637,11 @@ class MessageContactViewSet(viewsets.ModelViewSet):
         # Sauvegarder le message
         message = serializer.save()
         
+        
         # Envoyer les notifications par email
         try:
             # Email de notification au laboratoire
-            notif_ok = EmailService.envoyer_notification_nouveau_message(message)
+            notif_ok = EmailService.envoyer_notification_nouveau_message(message, message.id_laboratoire.id)
             if notif_ok:
                 logger.info(f"Notification envoyée au laboratoire pour le message {message.id}")
             else:

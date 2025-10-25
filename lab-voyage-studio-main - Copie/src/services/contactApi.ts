@@ -43,7 +43,7 @@ class ContactApiService {
         ...options.headers,
       },
     };
-
+    
     const response = await fetch(url, config);
 
     if (!response.ok) {
@@ -61,7 +61,7 @@ class ContactApiService {
    */
   async getContacts(filters: ContactFilters = {}): Promise<ContactApiResponse<ContactLaboratoireList>> {
     const queryParams = this.buildQueryParams(filters);
-    const endpoint = `/contacts/${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `contacts/${queryParams ? `?${queryParams}` : ''}`;
     return this.request<ContactApiResponse<ContactLaboratoireList>>(endpoint);
   }
 
@@ -69,14 +69,14 @@ class ContactApiService {
    * Récupère un contact spécifique par ID
    */
   async getContact(id: number): Promise<ContactLaboratoire> {
-    return this.request<ContactLaboratoire>(`/contacts/${id}/`);
+    return this.request<ContactLaboratoire>(`contacts/${id}/`);
   }
 
   /**
    * Crée un nouveau contact de laboratoire
    */
   async createContact(data: ContactLaboratoireCreate): Promise<ContactLaboratoire> {
-    return this.request<ContactLaboratoire>('/contacts/', {
+    return this.request<ContactLaboratoire>('contacts/', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -86,7 +86,7 @@ class ContactApiService {
    * Met à jour un contact existant
    */
   async updateContact(id: number, data: Partial<ContactLaboratoireCreate>): Promise<ContactLaboratoire> {
-    return this.request<ContactLaboratoire>(`/contacts/${id}/`, {
+    return this.request<ContactLaboratoire>(`contacts/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -96,7 +96,7 @@ class ContactApiService {
    * Supprime un contact
    */
   async deleteContact(id: number): Promise<void> {
-    return this.request<void>(`/contacts/${id}/`, {
+    return this.request<void>(`contacts/${id}/`, {
       method: 'DELETE',
     });
   }
@@ -105,7 +105,7 @@ class ContactApiService {
    * Récupère les horaires d'un contact spécifique
    */
   async getContactHoraires(contactId: number): Promise<HoraireLaboratoire[]> {
-    return this.request<HoraireLaboratoire[]>(`/contacts/${contactId}/horaires/`);
+    return this.request<HoraireLaboratoire[]>(`contacts/${contactId}/horaires/`);
   }
 
   /**
@@ -122,7 +122,7 @@ class ContactApiService {
    */
   async getHoraires(filters: HoraireFilters = {}): Promise<ContactApiResponse<HoraireLaboratoire>> {
     const queryParams = this.buildQueryParams(filters);
-    const endpoint = `/horaires/${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `horaires/${queryParams ? `?${queryParams}` : ''}`;
     return this.request<ContactApiResponse<HoraireLaboratoire>>(endpoint);
   }
 
@@ -130,14 +130,14 @@ class ContactApiService {
    * Récupère un horaire spécifique par ID
    */
   async getHoraire(id: number): Promise<HoraireLaboratoire> {
-    return this.request<HoraireLaboratoire>(`/horaires/${id}/`);
+    return this.request<HoraireLaboratoire>(`horaires/${id}/`);
   }
 
   /**
    * Crée un nouvel horaire
    */
   async createHoraire(data: HoraireLaboratoireCreate): Promise<HoraireLaboratoire> {
-    return this.request<HoraireLaboratoire>('/horaires/', {
+    return this.request<HoraireLaboratoire>('horaires/', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -147,7 +147,7 @@ class ContactApiService {
    * Met à jour un horaire existant
    */
   async updateHoraire(id: number, data: Partial<HoraireLaboratoireCreate>): Promise<HoraireLaboratoire> {
-    return this.request<HoraireLaboratoire>(`/horaires/${id}/`, {
+    return this.request<HoraireLaboratoire>(`horaires/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -157,7 +157,7 @@ class ContactApiService {
    * Supprime un horaire
    */
   async deleteHoraire(id: number): Promise<void> {
-    return this.request<void>(`/horaires/${id}/`, {
+    return this.request<void>(`horaires/${id}/`, {
       method: 'DELETE',
     });
   }
@@ -169,7 +169,7 @@ class ContactApiService {
    */
   async getMessages(filters: MessageFilters = {}): Promise<ContactApiResponse<MessageContactList>> {
     const queryParams = this.buildQueryParams(filters);
-    const endpoint = `/messages/${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `messages/${queryParams ? `?${queryParams}` : ''}`;
     return this.request<ContactApiResponse<MessageContactList>>(endpoint);
   }
 
@@ -177,14 +177,14 @@ class ContactApiService {
    * Récupère un message spécifique par ID
    */
   async getMessage(id: number): Promise<MessageContact> {
-    return this.request<MessageContact>(`/messages/${id}/`);
+    return this.request<MessageContact>(`messages/${id}/`);
   }
 
   /**
    * Envoie un nouveau message de contact
    */
   async sendMessage(data: MessageContactCreate): Promise<MessageCreateResponse> {
-    return this.request<MessageCreateResponse>('/messages/', {
+    return this.request<MessageCreateResponse>('messages/', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -194,7 +194,7 @@ class ContactApiService {
    * Met à jour un message existant
    */
   async updateMessage(id: number, data: Partial<MessageContactCreate>): Promise<MessageContact> {
-    return this.request<MessageContact>(`/messages/${id}/`, {
+    return this.request<MessageContact>(`messages/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -204,7 +204,7 @@ class ContactApiService {
    * Supprime un message
    */
   async deleteMessage(id: number): Promise<void> {
-    return this.request<void>(`/messages/${id}/`, {
+    return this.request<void>(`messages/${id}/`, {
       method: 'DELETE',
     });
   }
@@ -221,7 +221,7 @@ class ContactApiService {
     if (reponseAdmin) data.reponse_admin = reponseAdmin;
     if (responsableReponse) data.responsable_reponse = responsableReponse;
 
-    return this.request<MessageContact>(`/messages/${id}/marquer_traite/`, {
+    return this.request<MessageContact>(`messages/${id}/marquer_traite/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

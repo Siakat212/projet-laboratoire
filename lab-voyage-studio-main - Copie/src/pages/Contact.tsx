@@ -1,5 +1,4 @@
 import Navigation from "@/components/Navigation";
-import PageHero from "@/components/PageHero";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { Constants } from "@/constants/Constants";

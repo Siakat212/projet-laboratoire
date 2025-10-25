@@ -15,9 +15,6 @@ const HomeNews = (donnee) => {
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Section titre */}
           <div className="lg:w-1/3">
-            <Badge style={Constants.textWhite} className="bg-gradient-to-r from-primary/20 to-secondary/20 text-primary border-primary/30 mb-4">
-              Actualités
-            </Badge>
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
               {dataEntete
                 .filter((item) => item.block === "new" && item.page === "acceuil")
@@ -45,11 +42,18 @@ const HomeNews = (donnee) => {
             {news.map((item, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-card to-card/90 group hover:-translate-y-1 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute top-4 right-4 w-3 h-3 bg-gradient-to-br from-info to-info/80 rounded-full animate-pulse shadow-lg" />
+                <div className="hidden sm:block absolute top-4 right-4 w-3 h-3 bg-gradient-to-br from-info to-info/80 rounded-full animate-pulse shadow-lg" />
                 
                 <CardContent className="p-6 relative z-10">
                   <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                    <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br from-info to-info/80 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
+                    <div className={`flex-shrink-0 w-full sm:w-48 h-60 sm:h-48 bg-gradient-to-br from-info to-info/80 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}
+                          style={{
+                            backgroundImage: `url(${Constants.urlDomaine}static${(item.image_principal).split("/static").join("")})`,
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                            backgroundSize: "cover",
+                          }}
+                    >
                       <Calendar className="h-6 w-6" />
                     </div>
                     

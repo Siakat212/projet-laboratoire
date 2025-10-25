@@ -21,6 +21,7 @@ routeur.register(r'messages', MessageContactViewSet)
 urlpatterns = [
     path('labo_api/', include(routeur.urls)),
 
+    path('<int:id_laboratoire>/labo_api/laboratoire', laboratoire , name = 'laboratoire'),
     path('<int:id_laboratoire>/labo_api/enteteGeneral', enteteGeneral , name = 'enteteGeneral'),
     path('<int:id_laboratoire>/labo_api/presentation', presentation , name = 'presentation'),
     path('<int:id_laboratoire>/labo_api/presentation_image', presentationImage , name = 'presentationImage'),

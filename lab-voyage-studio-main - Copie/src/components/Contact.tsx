@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock, Car, Bus, Loader2 } from "lucide-react";
-import PageSlider from "./PageSlider";
-import PageHero from "./PageHero";
 import ContactInfo from "./ContactInfo";
 import { Constants } from "@/constants/Constants";
 import { useContactForm } from "@/hooks/useContactForm";

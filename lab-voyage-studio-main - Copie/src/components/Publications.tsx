@@ -118,7 +118,7 @@ const Publications = () => {
           </Card>
         </div> */}
 
-        <div className={"space-y-8 " + Constants.ClassPdXgrandBlock}>
+        <div className={"space-y-8 " + Constants.ClassPdXgrandBlock} style={Constants.bgWhite}>
           {publicationsFiltrer.map((pub, index) => (
             <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-700 bg-gradient-to-br from-card via-card to-card/95 group hover:-translate-y-3 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -205,7 +205,7 @@ const Publications = () => {
           ))}
         </div>
 
-        <div className="text-center mb-12">
+        <div className="text-center mb-12" style={Constants.bgWhite}>
           <Button 
             variant="outline" 
             size="lg"

@@ -10,12 +10,9 @@ const HomeDirector = (donnee) => {
     const dataEntete = donnee.donnee.dataEnteteGeneral.data  
 
   return (
-    <section className="py-20 px-5" style={Constants.bgWhite}>
+    <section style={Constants.bgWhite}>
       <div className={Constants.ClassPdXgrandBlock}>
-        <div className="text-center space-y-4 mb-16">
-          <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5">
-            Direction
-          </Badge>
+        <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             {dataEntete
               .filter((item) => item.block === "director" && item.page === "acceuil")
@@ -23,7 +20,7 @@ const HomeDirector = (donnee) => {
                 <span key={idx}>{item.titre}</span>
               ))} 
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             {dataEntete
               .filter((item) => item.block === "director" && item.page === "acceuil")
               .map((item, idx) => (
@@ -40,7 +37,7 @@ const HomeDirector = (donnee) => {
                 <div 
                   className="h-80 lg:h-full bg-cover bg-center bg-no-repeat"
                   style={{
-                    backgroundImage: `url(${Constants.url}/${director.image})`
+                    backgroundImage: `url(${Constants.urlDomaine}${director.image})`
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -50,7 +47,6 @@ const HomeDirector = (donnee) => {
                   <div className="absolute bottom-8 left-8 w-12 h-12 bg-primary/15 rounded-full blur-lg animate-pulse delay-500"></div>
                 </div>
               </div>
-
               {/* Content Section */}
               <div className="p-8 lg:p-12 space-y-6">
                 <div className="space-y-3">

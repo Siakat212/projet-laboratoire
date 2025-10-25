@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ExternalLink, Calendar, Users, Trophy, Search, ChevronUp, ChevronDown } from "lucide-react";
+import { ExternalLink, Calendar, Users, Trophy, Search, ChevronUp, ChevronDown, Zap } from "lucide-react";
 import PageSlider from "./PageSlider";
 import PageHero from "./PageHero";
 import { Constants } from "@/constants/Constants";
@@ -174,8 +174,8 @@ const Research = (donnee) => {
                       <div className="text-sm font-medium text-foreground">{project.nombreChercheur ? project.nombreChercheur : 0} {parseInt(project.nombreChercheur) > 1 ? "Chercheurs" : 'Chercheur' }</div>
                     </div>
                     <div className="text-center p-3 bg-gradient-to-br from-muted/50 to-muted/30 rounded-lg group-hover:shadow-md transition-all duration-300">
-                      <Trophy className="h-5 w-5 text-primary mx-auto mb-2" />
-                      <div className="text-sm font-medium text-foreground">{project.budget ? Number(project.budget).toLocaleString() : "0"} FCFA</div>
+                      <Zap className="h-5 w-5 text-primary mx-auto mb-2" />
+                      <div className="text-sm font-medium text-foreground">{project.tags.length > 1 ? project.tags.length + ' Domaine' : project.tags.length + ' Domaines'} d'expertise</div>
                     </div>
                   </div>
                 </CardContent>

@@ -101,9 +101,20 @@ const News = (donnee) => {
                       {item.date_realisation_fin ? dateFormatter(item.date_realisation_debut) + ' - ' + dateFormatter(item.date_realisation_fin) : dateFormatter(item.date_realisation_debut)}
                     </div>
                   </div>
+                  <div
+                  style={{
+                    backgroundImage: `url(${Constants.urlDomaine}static${(item.image_principal).split("/static").join("")})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    width: "100%",
+                    height: "350px"
+                  }}>
+
+                  </div>
+                                      {/* <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg group-hover:shadow-md transition-all duration-300 group-hover:scale-110">
+                    </div> */}
                   <CardTitle className="text-xl text-foreground group-hover:text-primary transition-colors duration-300 flex items-start gap-4 flex items-center">
-                    <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg group-hover:shadow-md transition-all duration-300 group-hover:scale-110">
-                    </div>
                     <span className="leading-tight">{item.titre}</span>
                   </CardTitle>
                 </CardHeader>

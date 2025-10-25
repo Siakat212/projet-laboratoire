@@ -7,6 +7,8 @@ import {
 import PageHero from "./PageHero";
 import { Constants } from "@/constants/Constants";
 import { useState, useEffect } from "react";
+import HomeDirector from "@/components/HomeDirector";
+
 
 
 
@@ -69,17 +71,18 @@ const About = (donnee) => {
           </div>
         </div>
 
+        <HomeDirector donnee={{'data' : donnee.donnee.dataDirecteur , 'dataEnteteGeneral': donnee.donnee.dataEnteteGeneral}}/>
 
         {/* Section Présentation du Laboratoire */}
-        <div className={"px-5 " + Constants.ClassPdXgrandBlock} style={Constants.bgWhite}>
+        <div className={"px-5 " + Constants.ClassPdXgrandBlock} style={Constants.bgPrincipal}>
           <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               {dataEntete
                 .filter((item) => item.block === "presentation" && item.page === "about")
                 .map((item, idx) => (
                   <span key={idx}>{item.titre}</span>
                 ))}
-              </h3>
+              </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               {dataEntete
                 .filter((item) => item.block === "presentation" && item.page === "about")
@@ -113,7 +116,7 @@ const About = (donnee) => {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img 
-                  src={`${Constants.url}/${dataImage.image}`}
+                  src={`${Constants.urlDomaine}${dataImage.image}`}
                   alt="Laboratoire de recherche"
                   className="w-full h-80 object-cover"
                 />
@@ -130,8 +133,8 @@ const About = (donnee) => {
           </div>
         </div>
 
-        
-        <div style={Constants.bgPrincipal} className={"grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-5 "  + Constants.ClassPdXgrandBlock}>
+        {/* Section mission du Laboratoire */}
+        <div style={Constants.bgWhite} className={"grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-5 "  + Constants.ClassPdXgrandBlock}>
           <div>
             <h3 className="text-2xl font-bold text-foreground mb-6">Notre Mission</h3>
             {dataMission.description.split('\n').map((line, i) => (
@@ -151,8 +154,8 @@ const About = (donnee) => {
             <div className="text-sm text-muted-foreground">Parcours master</div>
           </div>
           <div className="bg-primary-soft rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-primary mb-2">{dataMission && dataMission.budget ? dataMission.budget : 0 }</div>
-            <div className="text-sm text-muted-foreground">Budget Recherche</div>
+            <div className="text-3xl font-bold text-primary mb-2">{dataSlider && dataSlider.nombreDomaine ? dataSlider.nombreDomaine > 1000 ? '1000+' : dataSlider.nombreDomaine : "0"}</div>
+            <div className="text-sm text-muted-foreground">Domaines expertises</div>
           </div>
           <div className="bg-primary-soft rounded-lg p-6 text-center">
             <div className="text-3xl font-bold text-primary mb-2">{dataMission && dataMission.nombrePartenaire ? parseInt(dataMission.nombrePartenaire) > 1000 ? "1000+" : dataMission.nombrePartenaire : 0 }</div>
@@ -161,15 +164,16 @@ const About = (donnee) => {
           </div>
         </div>
 
-        <div style={Constants.bgWhite} className={Constants.ClassPdXgrandBlock}>
+        {/* Section domaine expertise du Laboratoire */}
+        <div style={Constants.bgPrincipal} className={Constants.ClassPdXgrandBlock}>
           <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               {dataEntete
                 .filter((item) => item.block === "domaine" && item.page === "about")
                 .map((item, idx) => (
                   <span key={idx}>{item.titre}</span>
                 ))}
-              </h3>
+              </h2>
             <p className="text-muted-foreground">
               {dataEntete
                 .filter((item) => item.block === "domaine" && item.page === "about")
@@ -222,15 +226,15 @@ const About = (donnee) => {
         </div>
 
         {/* Section Partenaires */}
-        <div className={Constants.ClassPdXgrandBlock} style={Constants.bgPrincipal}>
+        <div className={Constants.ClassPdXgrandBlock} style={Constants.bgWhite}>
           <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               {dataEntete
                 .filter((item) => item.block === "partenaire" && item.page === "about")
                 .map((item, idx) => (
                   <span key={idx}>{item.titre}</span>
             ))}
-            </h3>
+            </h2>
             <p className="text-muted-foreground">
               {dataEntete
                 .filter((item) => item.block === "partenaire" && item.page === "about")
@@ -244,12 +248,20 @@ const About = (donnee) => {
             {visiblePartners.map((partner, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-card group">
                 <CardContent className="p-6 text-center">
-                  <div className="mb-4 overflow-hidden rounded-lg">
-                    <img 
-                      src={`${Constants.url}/${partner.id_partenaire.logo}`}
+                  <div className="mb-4 overflow-hidden rounded-lg"
+                  style={{
+                    backgroundImage: `url(${Constants.urlDomaine}${partner.id_partenaire.logo})`,
+                    height:"200px",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    backgroundSize: "contain"
+                  }}  
+                  >
+                    {/* <img 
+                      src={`${Constants.urlDomaine}${partner.id_partenaire.logo}`}
                       alt={partner.id_partenaire.nom_partenaire}
                       className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    /> */}
                   </div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">{partner.id_partenaire.nom_partenaire}</h4>
                   <p className="text-muted-foreground text-sm mb-4">{partner.id_partenaire.description}</p>

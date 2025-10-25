@@ -16,16 +16,15 @@ const Index = () => {
     const [general, setGeneral] = useState(true);
 
     const [dataSilder, loadingSilder, errorSilder] = useFetch(`${Constants.url}/labo_api/acceuil_slider`);
-    const [dataDirecteur, loadingDirecteur, errorDirecteur] = useFetch(`${Constants.url}/labo_api/acceuil_directeur`);
     const [dataChiffre, loadingChiffre, errorChiffre] = useFetch(`${Constants.url}/labo_api/acceuil_chiffre`);
     const [dataActualite, loadingActualite, errorActualite] = useFetch(`${Constants.url}/labo_api/acceuil_actualite`);
     const [dataPresentation, loadingPresentation, errorPresentation] = useFetch(`${Constants.url}/labo_api/acceuil_presentation`);
     const [dataEnteteGeneral, loadingEnteteGeneral, errorEnteteGeneral] = useFetch(`${Constants.url}/labo_api/enteteGeneral`);
-
+  console.log(dataEnteteGeneral);
+  
     // Combine all loading states
     const loading =
       loadingSilder ||
-      loadingDirecteur ||
       loadingChiffre ||
       loadingActualite || 
       loadingPresentation ||
@@ -34,7 +33,6 @@ const Index = () => {
     // Combine all error states
     const error =
       errorSilder ||
-      errorDirecteur ||
       errorChiffre ||
       errorActualite ||
       errorPresentation ||
@@ -49,7 +47,7 @@ const Index = () => {
     }
 
     if (error) {
-      return <p>Erreur : {errorActualite || errorSilder || errorDirecteur || errorChiffre || errorPresentation || errorEnteteGeneral}</p>;
+      return <p>Erreur : {errorActualite || errorSilder || errorChiffre || errorPresentation || errorEnteteGeneral}</p>;
     }
 
     
@@ -67,7 +65,6 @@ const Index = () => {
       <Navigation />
       <Hero donnee={{'data' : dataSilder, 'dataEnteteGeneral': dataEnteteGeneral}} />
       <HomeAbout  donnee={{'data' : dataPresentation, 'dataEnteteGeneral': dataEnteteGeneral}}/>
-      <HomeDirector donnee={{'data' : dataDirecteur, 'dataEnteteGeneral': dataEnteteGeneral}}/>
       <HomeFeatures donnee={{'dataEnteteGeneral': dataEnteteGeneral}} />
       <HomeStats donnee={{'data' : dataChiffre, 'dataEnteteGeneral': dataEnteteGeneral}}/>
       <HomeNews donnee={{'data' : dataActualite, 'dataEnteteGeneral': dataEnteteGeneral}} />

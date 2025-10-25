@@ -142,6 +142,7 @@ class TypeLaboratoire(models.Model):
 class Laboratoire(models.Model):
     id_type_laboratoire = models.ForeignKey(TypeLaboratoire, on_delete=models.CASCADE)
     nom = models.CharField(max_length=255)
+    description = models.CharField(max_length= 255, default= "Laboratoire de recherche universitaire d'excellence, pionnier dans l'innovation scientifique et technologique depuis plus de 20 ans.")
     logo = models.ImageField(upload_to="static/images/")
     ufr = models.CharField(max_length=255)
     date_de_creation = models.DateField()
@@ -715,11 +716,6 @@ class ContactLaboratoire(models.Model):
     """
     TYPE_CONTACT_CHOICES = [
         ("principal", "Contact principal"),
-        ("direction", "Direction"),
-        ("administration", "Administration"),
-        ("recherche", "Service recherche"),
-        ("partenariats", "Partenariats"),
-        ("communication", "Communication"),
     ]
     
     id_laboratoire = models.ForeignKey(

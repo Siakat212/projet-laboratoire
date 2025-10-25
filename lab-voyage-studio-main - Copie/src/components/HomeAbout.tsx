@@ -12,15 +12,12 @@ const HomeAbout = (donnee) => {
   
   
   return (
-    <section className="py-20 px-5" style={Constants.bgPrincipal} id="about">
+    <section className="py-20 px-5" style={Constants.bgWhite} id="about">
       <div className={Constants.ClassPdXgrandBlock}>
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content Section */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5">
-                À propos de nous
-              </Badge>
               <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                 {dataEntete
                   .filter((item) => item.block === "about" && item.page === "acceuil")
@@ -107,7 +104,7 @@ const HomeAbout = (donnee) => {
                   <div 
                     className="w-full h-full bg-cover bg-center bg-no-repeat"
                     style={{
-                      backgroundImage: `url(${Constants.url}/${dataPresentation.image})`
+                      backgroundImage: `url(${Constants.urlDomaine}${dataPresentation.image})`
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />

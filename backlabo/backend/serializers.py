@@ -301,11 +301,13 @@ class acceuilDirecteurSerializers(serializers.ModelSerializer):
 
 class acceuilChiffreCleSerializers(serializers.ModelSerializer):
     nombreChercheur = serializers.SerializerMethodField()
+    nombreDoctorant = serializers.SerializerMethodField()
     nombrePublication = serializers.SerializerMethodField()
     nombreRechercheActif = serializers.SerializerMethodField()
     nombrePartenaire = serializers.SerializerMethodField()
     nombreRechercherFinaliser = serializers.SerializerMethodField()
     nombreDomaine = serializers.SerializerMethodField()
+
 
     
     class Meta:
@@ -314,8 +316,13 @@ class acceuilChiffreCleSerializers(serializers.ModelSerializer):
 
         
     def get_nombreChercheur(self, obj):
-        return len(ChercheurLaboratoire.objects.filter(id_laboratoire = obj))
+        return ChercheurLaboratoire.objects.filter( id_laboratoire=obj ).exclude( id_chercheur_poste__id_poste__nom="Doctorant" ).count()
+
     
+    def get_nombreDoctorant(self, obj):
+        return len(ChercheurLaboratoire.objects.filter(id_laboratoire = obj, id_chercheur_poste__id_poste__nom = "Doctorant"))
+
+
     def get_nombrePublication(self, obj):
         try:
             tableauPublication = []
